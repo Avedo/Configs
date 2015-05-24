@@ -6,6 +6,14 @@ colorscheme jellybeans
 " Enable syntax processing.
 syntax enable
 
+" Environment --------------------------------
+
+" Set utf8 as standard encoding.
+set encoding=utf8
+
+" Use Unix as the standard file type
+set ffs=unix,dos,mac
+
 " Spaces & Tabs ------------------------------
 
 " Number of visual spaces per TAB.
@@ -25,6 +33,9 @@ set number
 " Show the last entered command in bottom bar.
 set showcmd
 
+" Height of the command bar.
+set cmdheight=1
+
 " Highlight the current line.
 set cursorline
 
@@ -34,6 +45,9 @@ filetype indent on
 " Enable a visual autocomplete menu for commands.
 set wildmenu
 
+" Ignore compiled files during autocomplete.
+set wildignore=*.o,*~,*.pyc
+
 " Prevent vim from unnecessary redrawing.
 set lazyredraw
 
@@ -41,6 +55,12 @@ set lazyredraw
 set showmatch
 
 " Searching ----------------------------------
+
+" Ignore case when searching.
+set ignorecase
+
+" When searching try to be smart about cases. 
+set smartcase
 
 " Already search as characters are entered.
 set incsearch
@@ -50,6 +70,9 @@ set hlsearch
 
 " Keep old matches until running new command or :nohlsearch.
 nnoremap <leader><space> :nohlsearch<CR>
+
+" Allow regular expressions in search terms.
+set magic
 
 " Folding ------------------------------------
 
