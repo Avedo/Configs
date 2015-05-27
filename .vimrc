@@ -54,6 +54,9 @@ set lazyredraw
 " Highlight matching brackets.
 set showmatch
 
+" Add an colorized column to indicate 80th column.
+set colorcolumn=80
+
 " Searching ----------------------------------
 
 " Ignore case when searching.
@@ -104,3 +107,11 @@ nnoremap gV `[v`]
 
 " Save session.
 nnoremap <leader>s :mksession<CR>
+
+" Fugitive Shortcuts -------------------------
+noremap \gs :Gstatus<cr>
+noremap \gc :Gcommit<cr>
+noremap \ga :Gwrite<cr>
+noremap \gl :Glog<cr>
+noremap \gd :Gdiff<cr>
+noremap \gb :Gblame<cr>
