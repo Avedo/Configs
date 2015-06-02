@@ -1,0 +1,24 @@
+#!/bin/bash
+## Simple Bashscript to print a file in the math institute.
+##
+## Author: Andreas Wilhelm <www.avedo.net> under Apache 2.0
+## --------------------------------------------------------
+ 
+# Get the script name.
+SCRIPT="${0##*/}"
+
+# Failsafe.
+[[ $# -ne 1 ]] && { echo -en "Usage:\t$SCRIPT /path/to/file.pdf\n"; exit 1; }
+
+# Get pdf path from cmd argument.
+PATHNAME="$1"
+FILENAME="${PATHNAME##*/}"
+
+# Copy file to remote file system ...
+scp ${PATHNAME} andreas.wilhelm@login.math.uni-goettingen.de:~/Temp/${FILENAME}
+
+# ... and print the file on the remote system.
+ssh andreas.wilhelm@login.math.uni-goettingen.de lpr -P umicip -o sides=two-sided-long-edge ~/Temp/${FILENAME}
+
+# Exit remote system.
+exit
