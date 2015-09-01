@@ -13,4 +13,6 @@ complete -cf sudo
 leoGet() { lang=en; IFS=+; Q="${*// /%20}"; curl -s "https://dict.leo.org/${lang}de/?search=${Q//+/%20}" | html2text | grep -EA 900 '^\*{5} ' | grep -B 900 '^Weitere Aktionen$';}
 alias leo=leoGet
 
+alias rst='echo -e "\0033\0143"'
+
 export PATH=$PATH:$HOME/bin
