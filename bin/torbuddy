@@ -1,0 +1,133 @@
+#!/bin/bash
+
+## Tor-Buddy by AfterBurn @ NetSecNow
+##
+## http://learnnetsec.blogspot.com
+##
+## Upgrade for systems using systemd by Avedo @ Bornageek
+## 
+## http://www.bornageek.com
+
+# Define the usage text
+USAGE=$( cat <<EOF
+USAGE: `basename $0` [-hv]\n
+-h|--help
+\tDisplays this help.
+-v|--version
+\tDisplays the current version of this script.
+EOF
+)
+
+# All users with $UID 0 have root privileges.
+ROOT_UID=0
+
+# Define some constants.
+INIT_UNKOWN=-1
+INIT_SYSTEMD=0
+INIT_UPSTART=1
+INIT_VINIT=2
+
+# Fetch the used init system.
+fetchInit() {
+  if [[ `/sbin/init --version` =~ upstart ]]; then 
+    echo $INIT_UPSTART
+  elif [[ `systemctl` =~ -\.mount ]]; then 
+    echo $INIT_SYSTEMD
+  elif [[ -f /etc/init.d/cron && ! -h /etc/init.d/cron ]]; then 
+    echo $INIT_VINIT
+  else
+    echo $INIT_UNKOWN
+  fi
+}
+
+# Join array to string.
+join() {
+  local IFS="$1"
+  shift
+  echo "$*"
+}
+
+# Check if a given program is installed
+haveProg() {
+  which $1 &> /dev/null
+}
+
+# Callback for unexpected exit.
+function cleanup {
+  echo -en "\nGoodbye - Happy Hacking!\n"
+  if [[ `fetchInit` -eq "$INIT_U" ]] ; then
+    service tor stop
+  elif [[ `fetchInit` -eq "$INIT_UPSTART" ]] ; then
+    systemctl stop tor
+  elif [[ `fetchInit` -eq "$INIT_VINIT" ]] ; then
+    /etc/init.d/tor stop
+  fi
+  echo -en "Tor has been stopped. You are no longer proxied!\n"
+  exit $?
+}
+
+# Check if user has root privilegues.
+if [[ $EUID -ne $ROOT_UID ]]; then
+  echo -e "You have to execute this script as root!"
+  exit 2
+fi
+
+# Declare a list of packages needed in order to use this script.
+packages=('tor' 'proxychains')
+
+# Generate a list of missing packages.
+missing=()
+cnt=${#packages[@]}
+for ((i=0;i<cnt;i++)); do
+  if ! haveProg "${packages[i]}"; then
+    missing+=("${packages[i]}")
+  fi
+done
+
+# Dump an error message for missing packages.
+if [[ ${#missing[@]} -ne 0 ]] ; then
+  missingStr=`join ' ' ${missing[@]}`
+  echo -e "The following packages are missing: $missingStr"
+  exit 2
+fi
+
+# Start the actual script.
+echo -e "Tor-Buddy by AfterBurn @ NetSecNow http://learnnetsec.blogspot.com/\n\n"
+echo -e "To stop script press CTRL+C\n"
+
+echo -e "Starting Tor :-)\n"
+if [[ `fetchInit` -eq "$INIT_U" ]] ; then
+  service tor start
+elif [[ `fetchInit` -eq "$INIT_UPSTART" ]] ; then
+  systemctl start tor
+elif [[ `fetchInit` -eq "$INIT_VINIT" ]] ; then
+  /etc/init.d/tor start
+fi
+
+## Set timeout to restart ToR to change IP in Seconds.
+echo -e "Please enter how many seconds you want to grab a new IP: \c"
+
+read TIME
+
+if [[ "$TIME" -lt "30" ]]; then
+  echo -e "WARN: Less than 30 seconds is not suggested due to timeout errors!\n"
+  echo -e "We will do it anyway. If you have issues, restart script\n"
+else
+  echo -e "Setting up timer, standby...\n"
+fi
+
+# Capture SIGINT (Ctrl-C) and exit the script clean.
+trap cleanup SIGINT
+
+for (( ; ; ))
+do 
+  sleep $TIME
+  if [[ `fetchInit` -eq "$INIT_U" ]] ; then
+    service tor restart
+  elif [[ `fetchInit` -eq "$INIT_UPSTART" ]] ; then
+    systemctl restart tor
+  elif [[ `fetchInit` -eq "$INIT_VINIT" ]] ; then
+    /etc/init.d/tor restart
+  fi
+  echo -e "Tor restarted - $TIME seconds until next IP Change \n"
+done
