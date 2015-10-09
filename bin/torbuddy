@@ -10,7 +10,7 @@
 
 # Define the usage text
 USAGE=$( cat <<EOF
-USAGE: `basename $0` [-hvt]\n
+USAGE: `basename $0` [-hv] [-s <seconds>]\n
 -h|--help
 \tDisplays this help.
 -v|--version
@@ -121,9 +121,10 @@ do
       ;;
     --seconds|-s)
       shift
-      $TIME=$1
+      TIME=$1
 
-      if ! [[ $TIME =~ '^[0-9]+$' ]] ; then
+      re='^[0-9]+$'
+      if ! [[ $TIME =~ $re ]] ; then
         error "Given time is not a number."
       fi
       shift
