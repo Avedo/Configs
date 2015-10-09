@@ -10,22 +10,42 @@
 
 # Define the usage text
 USAGE=$( cat <<EOF
-USAGE: `basename $0` [-hv]\n
+USAGE: `basename $0` [-hvt]\n
 -h|--help
 \tDisplays this help.
 -v|--version
 \tDisplays the current version of this script.
+-s|--seconds
+\tTime interval to refresh IP (default: 300 seconds).
 EOF
 )
 
 # All users with $UID 0 have root privileges.
 ROOT_UID=0
 
+# Define default time interval.
+TIME=300
+
 # Define some constants.
 INIT_UNKOWN=-1
 INIT_SYSTEMD=0
 INIT_UPSTART=1
 INIT_VINIT=2
+
+# Message functions.
+function notice() {
+  echo -en "$*" >&2
+}
+
+function info() {
+  echo -en "$*" >&2
+  exit 0
+}
+
+function error() {
+  echo -e "$*" >&2
+  exit 1
+}
 
 # Fetch the used init system.
 fetchInit() {
@@ -54,7 +74,7 @@ haveProg() {
 
 # Callback for unexpected exit.
 function cleanup {
-  echo -en "\nGoodbye - Happy Hacking!\n"
+  notice "\nGoodbye - Happy Hacking!\n"
   if [[ `fetchInit` -eq "$INIT_U" ]] ; then
     service tor stop
   elif [[ `fetchInit` -eq "$INIT_UPSTART" ]] ; then
@@ -62,14 +82,13 @@ function cleanup {
   elif [[ `fetchInit` -eq "$INIT_VINIT" ]] ; then
     /etc/init.d/tor stop
   fi
-  echo -en "Tor has been stopped. You are no longer proxied!\n"
+  notice "Tor has been stopped. You are no longer proxied!\n"
   exit $?
 }
 
 # Check if user has root privilegues.
 if [[ $EUID -ne $ROOT_UID ]]; then
-  echo -e "You have to execute this script as root!"
-  exit 2
+  error "You have to execute this script as root!"
 fi
 
 # Declare a list of packages needed in order to use this script.
@@ -87,33 +106,56 @@ done
 # Dump an error message for missing packages.
 if [[ ${#missing[@]} -ne 0 ]] ; then
   missingStr=`join ' ' ${missing[@]}`
-  echo -e "The following packages are missing: $missingStr"
-  exit 2
+  error "The following packages are missing: $missingStr"
 fi
 
-# Start the actual script.
-echo -e "Tor-Buddy by AfterBurn @ NetSecNow http://learnnetsec.blogspot.com/\n\n"
-echo -e "To stop script press CTRL+C\n"
+# Fetch command line options.
+while [[ -n "${1+xxx}" ]]
+do
+  case "$1" in
+    --help|-h)
+      info "$USAGE\n"
+      ;;
+    --version|-v)
+      info "`basename $0` version 0.2\n"
+      ;;
+    --seconds|-s)
+      shift
+      $TIME=$1
 
-echo -e "Starting Tor :-)\n"
-if [[ `fetchInit` -eq "$INIT_U" ]] ; then
+      if ! [[ $TIME =~ '^[0-9]+$' ]] ; then
+        error "Given time is not a number."
+      fi
+      shift
+      ;;
+    -*)
+      error "unrecognized option: $1\n\n$USAGE"
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+# Start the actual script.
+notice "Tor-Buddy by AfterBurn @ NetSecNow http://learnnetsec.blogspot.com/\n\n"
+notice "To stop script press CTRL+C\n"
+
+notice "Starting Tor :-)\n"
+if [[ `fetchInit` -eq "$INIT_UPSTART" ]] ; then
   service tor start
-elif [[ `fetchInit` -eq "$INIT_UPSTART" ]] ; then
+elif [[ `fetchInit` -eq "$INIT_SYSTEMD" ]] ; then
   systemctl start tor
 elif [[ `fetchInit` -eq "$INIT_VINIT" ]] ; then
   /etc/init.d/tor start
 fi
 
 ## Set timeout to restart ToR to change IP in Seconds.
-echo -e "Please enter how many seconds you want to grab a new IP: \c"
-
-read TIME
-
 if [[ "$TIME" -lt "30" ]]; then
-  echo -e "WARN: Less than 30 seconds is not suggested due to timeout errors!\n"
-  echo -e "We will do it anyway. If you have issues, restart script\n"
+  notice "WARN: Less than 30 seconds is not suggested due to timeout errors!\n"
+  notice "We will do it anyway. If you have issues, restart script\n"
 else
-  echo -e "Setting up timer, standby...\n"
+  notice "Setting up timer, standby...\n"
 fi
 
 # Capture SIGINT (Ctrl-C) and exit the script clean.
@@ -122,12 +164,12 @@ trap cleanup SIGINT
 for (( ; ; ))
 do 
   sleep $TIME
-  if [[ `fetchInit` -eq "$INIT_U" ]] ; then
+  if [[ `fetchInit` -eq "$INIT_UPSTART" ]] ; then
     service tor restart
-  elif [[ `fetchInit` -eq "$INIT_UPSTART" ]] ; then
+  elif [[ `fetchInit` -eq "$INIT_SYSTEMD" ]] ; then
     systemctl restart tor
   elif [[ `fetchInit` -eq "$INIT_VINIT" ]] ; then
     /etc/init.d/tor restart
   fi
-  echo -e "Tor restarted - $TIME seconds until next IP Change \n"
+  notice "Tor restarted - $TIME seconds until next IP Change \n"
 done
