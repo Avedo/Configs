@@ -15,4 +15,4 @@ alias leo=leoGet
 
 alias rst='echo -e "\0033\0143"'
 
-export PATH=$PATH:$HOME/bin
+export PATH=$PATH:$HOME/bin:$HOME/.gem/ruby/2.2.0/bin
