@@ -24,4 +24,5 @@ alias leo=leoGet
 alias rst='echo -e -n "\0033\0143"'
 alias ddmon='watch -n 5 `sudo kill -USR1 $(pgrep ^dd)`'
 
+export EDITOR="vim"
 export PATH=$PATH:$HOME/bin:$HOME/.gem/ruby/2.2.0/bin
