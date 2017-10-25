@@ -86,8 +86,8 @@ set noexpandtab
 set showbreak=↪\
 
 " Visualize tabs, spaces and lineendings
-"set listchars=tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
-set lcs=tab:»·,nbsp:␣,trail:·,extends:⟩,precedes:⟨
+"set listchars=tab:»\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
+set lcs=tab:→\ ,nbsp:␣,trail:·,extends:⟩,precedes:⟨
 set list
 
 " Configure coloring for these
