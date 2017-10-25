@@ -13,7 +13,6 @@ Plug 'joshdick/onedark.vim'
 Plug 'morhetz/gruvbox'
 Plug 'tomasr/molokai'
 
-
 " Status bar
 Plug 'vim-airline/vim-airline'
 
@@ -58,6 +57,9 @@ Plug 'ChaiScript/vim-cpp'
 
 " Syntax for chai script
 Plug 'ChaiScript/vim-cpp'
+
+" Syntax and more for bitbake
+Plug 'kergoth/vim-bitbake'
 
 call plug#end()
 
