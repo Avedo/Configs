@@ -8,7 +8,11 @@ call plug#begin('~/.nvim/plugged')
 
 " Color scheme
 Plug 'YorickPeterse/happy_hacking.vim'
+Plug 'KeitaNakamura/neodark.vim'
+Plug 'joshdick/onedark.vim'
 Plug 'morhetz/gruvbox'
+Plug 'tomasr/molokai'
+
 
 " Status bar
 Plug 'vim-airline/vim-airline'
@@ -176,7 +180,8 @@ set laststatus=2
 "
 
 " Set the color scheme
-set background=dark
+"set background=dark
+"colorscheme onedark
 "colorscheme happy_hacking
 "set background=light
 "let g:gruvbox_contrast_light="hard"
@@ -186,7 +191,11 @@ set background=dark
 "let g:gruvbox_improved_warnings=1
 "let g:gruvbox_undercurl=1
 "let g:gruvbox_contrast_dark="hard"
-colorscheme gruvbox
+"colorscheme gruvbox
+
+colorscheme neodark
+let g:neodark#use_256color = 1
+let g:neodark#background = '#2020FF'
 
 " Set editor font to DejaVu Sans Mono 10
 set guifont=DejaVu\ Sans\ Mono\ 10
@@ -206,6 +215,7 @@ set signcolumn="yes"
 
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme = 'neodark'
 
 let g:rbpt_max = 16
 let g:rbpt_loadcmd_toggle = 0
