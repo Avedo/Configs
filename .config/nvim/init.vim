@@ -40,6 +40,9 @@ Plug 'tpope/vim-fugitive'
 " Automatic indentation
 Plug 'tpope/vim-sleuth'
 
+" Show identation guides
+"Plug 'Yggdroot/indentLine'
+
 " Show a git diff n the gutter
 Plug 'airblade/vim-gitgutter'
 
@@ -53,9 +56,6 @@ Plug 'vim-scripts/IndexedSearch'
 Plug 'PProvost/vim-markdown-jekyll'
 
 " Syntax for c++11 with chai script support
-Plug 'ChaiScript/vim-cpp'
-
-" Syntax for chai script
 Plug 'ChaiScript/vim-cpp'
 
 " Syntax and more for bitbake
@@ -113,6 +113,13 @@ set showmatch
 
 " Copy to system clipboard when you yank
 set clipboard=unnamedplus
+
+"
+" Keybindings
+"
+
+" Escape terminal mode using escape
+tnoremap <Esc> <C-\><C-n>
 
 "
 " Search
