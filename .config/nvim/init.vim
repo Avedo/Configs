@@ -25,6 +25,9 @@ Plug 'sbdchd/neoformat'
 " Commenter
 Plug 'tpope/vim-commentary'
 
+" File Tree
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+
 " Fuzzy searching for opening files
 Plug 'ctrlpvim/ctrlp.vim'
 
@@ -102,9 +105,6 @@ set foldlevelstart=10
 " Limit foldening to max 10
 set foldnestmax=10
 
-" Space open/closes folds
-nnoremap <space> za
-
 " Fold based on indent level
 set foldmethod=indent
 
@@ -118,8 +118,27 @@ set clipboard=unnamedplus
 " Keybindings
 "
 
+" Map the leader key from '\' to ';'
+"let mapleader=";"
+
 " Escape terminal mode using escape
 tnoremap <Esc> <C-\><C-n>
+
+" Toggle nerdtree
+nnoremap <silent> <leader>t :NERDTreeToggle<CR>
+
+" Space open/closes folds
+nnoremap <space> za
+
+" Toggle auto-indenting for code paste
+set pastetoggle=<F2>
+
+" Toggle whitespace highlighting
+nnoremap <silent> <F7> :ToggleWhitespace<CR>
+
+" Move vertically by visual line
+nnoremap j gj
+nnoremap k gk
 
 "
 " Search
@@ -183,6 +202,10 @@ set laststatus=2
 
 " Height of command bar
 "set cmdheight=1
+
+" Highlight tabs and trailing whitespaces
+highlight ExtraWhitespace ctermbg=darkred guibg=darkred
+match ExtraWhitespace /\s\+\|\t/
 
 "
 " Color Scheme
