@@ -1,0 +1,123 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Inserts a blank line between shell prompts
+add_newline = false
+
+# IMPORTANT! Do not waste too much time for scanning the current directory (in ms).
+scan_timeout = 10
+
+# Disable the linebreak in the prompt
+[line_break]
+disabled = true
+
+# Reenable username
+[username]
+show_always= true
+disabled = false
+style_user = "white"
+style_root = "red"
+format = "[$user]($style)@"
+
+# SHow hostname on ssh only
+[hostname]
+ssh_only = false
+disabled = false
+style = "white"
+format = "[$ssh_symbol$hostname]($style):"
+
+# Prompt character
+[character]
+success_symbol = "[λ](bold green)"
+error_symbol = "[λ](bold red)"
+
+[cmd_duration]
+min_time = 10_000
+
+[time]
+disabled = true
+
+[git_commit]
+commit_hash_length = 8
+style = "bold white"
+
+[git_state]
+format = '[\($state( $progress_current of $progress_total)\)]($style) '
+
+#### Disabled modules ####
+[hg_branch]
+disabled = true
+
+[dart]
+disabled = true
+
+[dotnet]
+disabled = true
+
+[elixir]
+disabled = true
+
+[elm]
+disabled = true
+
+[erlang]
+disabled = true
+
+[golang]
+disabled = true
+
+[helm]
+disabled = true
+
+#[java]
+#disabled = true
+
+[julia]
+disabled = true
+
+[kotlin]
+disabled = true
+
+[nim]
+disabled = true
+
+[ocaml]
+disabled = true
+
+#[php]
+#disabled = true
+
+[purescript]
+disabled = true
+
+[swift]
+disabled = true
+
+[zig]
+disabled = true
+
+[memory_usage]
+disabled = true
+
+[gcloud]
+disabled = true
+
+[openstack]
+disabled = true
+
+[crystal]
+disabled = true
+
+[lua]
+disabled = true
+
+[jobs]
+disabled = true
+
+[battery]
+disabled = true
+
+# Disable the package module, hiding it from the prompt completely
+#[package]
+#disabled = true
+
