@@ -24,6 +24,12 @@ set ttyfast
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
 
+" Split the always below
+set splitbelow
+
+" Set the terminal size to 10 rows
+set termwinsize=10x0
+
 "
 " General
 "
@@ -64,7 +70,8 @@ set backspace=indent,eol,start
 set tabstop=4
 
 " Home many columns are inserted if tab is hit
-set softtabstop=4
+" (only use for mixed tabs/spaces setup)
+set softtabstop=0
 
 " Columns indented with reindent operations (<< and >>)
 set shiftwidth=4
@@ -76,12 +83,11 @@ set autoindent
 set noexpandtab
 
 " Show automatic breaks
-set showbreak=↪\
+let &showbreak='↪ '
 
 " Visualize tabs, spaces and lineendings
 set list!
-set listchars=tab:→\ ,nbsp:␣,extends:⟩,precedes:⟨
-"set listchars=tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
+set listchars=tab:→\ ,nbsp:␣,trail:•,extends:⟩,precedes:⟨
 
 " Configure coloring for these
 hi SpecialKey ctermfg=66 guifg=#649A9A
@@ -271,7 +277,7 @@ set autoread
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
-set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#begin()
 
 " Vundle is short for Vim bundle and is a Vim plugin manager.
@@ -282,7 +288,7 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'YorickPeterse/happy_hacking.vim'
 
 " taglist: Source code browser for the Vim editor
-Plugin 'taglist.vim'
+Plugin 'taglist-plus'
 
 " vim-fugitive: Issue git commands from vim and show branch in vim-airline
 Plugin 'tpope/vim-fugitive'
