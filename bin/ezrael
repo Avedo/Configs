@@ -1,6 +1,0 @@
-#!/bin/bash
-## Simple Bashscript to start the ezrael IRC bot.
-##
-## Author: Andreas Wilhelm <www.avedo.net> under Apache 2.0
-## --------------------------------------------------------
-python /home/awilhelm/Documents/Programming/Python/Ezrael/ezrael.py

@@ -1,2 +1,0 @@
-#!/bin/bash
-vbam --save-auto --filter=17 --rtc $1
